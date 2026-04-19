@@ -9,9 +9,10 @@ This project implements image styling based on pure linear algebra principles, d
 - **Zhang et al. (2013)**: Style transfer via image component analysis (Decomposition into Draft, Paint, and Edge).
 
 ## Project Structure
-- `src/`: Core implementation of the style transfer engine.
+- `style_transfer.py`: The main script for applying image styles.
 - `report/`: Detailed mathematical report and results.
-- `assets/`: Test images and examples.
+- `assets/content/`: Folder for images to be styled.
+- `assets/styles/`: Folder for style images (e.g., paintings, themes).
 
 ## Features
 - [ ] Global Covariance Style Transfer
