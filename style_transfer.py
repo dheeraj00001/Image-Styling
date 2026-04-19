@@ -2,6 +2,24 @@ import numpy as np
 import cv2
 from scipy.linalg import sqrtm
 
+def resize_image_if_needed(image, max_dimension=1024):
+    """
+    Resize image if its largest dimension exceeds max_dimension,
+    maintaining aspect ratio.
+    """
+    height, width = image.shape[:2]
+    if max(height, width) <= max_dimension:
+        return image
+    
+    # Calculate scaling factor
+    scale = max_dimension / max(height, width)
+    new_width = int(width * scale)
+    new_height = int(height * scale)
+    
+    # Resize using INTER_AREA for shrinking (better quality)
+    resized = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_AREA)
+    return resized
+
 def get_stats(image_data):
     """
     Computes mean and covariance matrix for an image.
@@ -91,16 +109,21 @@ if __name__ == "__main__":
     import sys
     
     if len(sys.argv) < 3:
-        print("Usage: python core.py <content> <style> <output> [--multiscale]")
+        print("Usage: python style_transfer.py <content> <style> <output> [--multiscale]")
         sys.exit(1)
         
+    # Read images
     c = cv2.imread(sys.argv[1])
     s = cv2.imread(sys.argv[2])
     
     if c is None or s is None:
         print("Error: Could not read images.")
         sys.exit(1)
-        
+    
+    # Resize large images to prevent memory issues
+    c = resize_image_if_needed(c)
+    s = resize_image_if_needed(s)
+    
     if "--multiscale" in sys.argv:
         res = laplacian_pyramid_style_transfer(c, s)
     else:
